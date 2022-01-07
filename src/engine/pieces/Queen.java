@@ -2,12 +2,20 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
-import engine.Tile;
+import engine.moves.Movement;
+import engine.moves.OrthogonalMove;
 
 public class Queen extends Piece{
-    public Queen(PlayerColor color) {
-        super(color, PieceType.QUEEN);
+    public Queen(PlayerColor color, Piece[][] board) {
+        super(color, PieceType.QUEEN, board,  new Movement[] {
+                new OrthogonalMove(1,1),
+                new OrthogonalMove(1,-1),
+                new OrthogonalMove(-1,1),
+                new OrthogonalMove(-1,-1),
+                new OrthogonalMove(0, 1),
+                new OrthogonalMove(1, 0),
+                new OrthogonalMove(0, -1),
+                new OrthogonalMove(-1, 0)
+        });
     }
-
-    public void move(Tile begin, Tile end){}
 }
