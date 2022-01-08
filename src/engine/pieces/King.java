@@ -23,8 +23,13 @@ public class King extends SpecialPiece{
     }
 
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
-        if(abs(toY-fromY) <= 1 || abs(toX-fromY) <= 1 ){
-            return super.canMove(fromX, fromY, toX, toY);
+        if(abs(fromX-toX) == 2 && fromY-toY == 0){
+
+        }
+        else {
+            if (abs(toY - fromY) <= 1 || abs(toX - fromY) <= 1) {
+                return super.canMove(fromX, fromY, toX, toY);
+            }
         }
         return false;
     }

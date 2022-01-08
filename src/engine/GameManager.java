@@ -2,8 +2,6 @@ package engine;
 import chess.*;
 import engine.pieces.*;
 
-import java.awt.*;
-
 
 public class GameManager implements ChessController {
     final int BOARD_SIZE = 8;
@@ -30,8 +28,7 @@ public class GameManager implements ChessController {
                 if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved() == 0)
                     ((SpecialPiece) board[fromX][fromY]).moved(turn);
 
-                view.putPiece(board[fromX][fromY].getType(), board[fromX][fromY].getColor(), toX, toY);
-                view.removePiece(fromX, fromY);
+                drawBoard();
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
@@ -51,12 +48,7 @@ public class GameManager implements ChessController {
     @Override
     public void newGame() {
         initBoard();
-        for(int y = 0; y < BOARD_SIZE; y++){
-            for(int x = 0; x < BOARD_SIZE; x++){
-                if(board[x][y] != null)
-                    view.putPiece(board[x][y].getType(), board[x][y].getColor(), x, y);
-            }
-        }
+        drawBoard();
     }
 
     /**
@@ -94,6 +86,18 @@ public class GameManager implements ChessController {
                 board[i][j] = new Pawn(color, board);
             }
             color = PlayerColor.BLACK;
+        }
+    }
+
+    private void drawBoard(){
+        for(int i = 0; i < BOARD_SIZE; ++i){
+            for(int j = 0; j < BOARD_SIZE; ++j){
+                if(board[i][j] == null){
+                    view.removePiece(i,j);
+                }else{
+                    view.putPiece(board[i][j].getType(),board[i][j].getColor(),i,j);
+                }
+            }
         }
     }
 }
