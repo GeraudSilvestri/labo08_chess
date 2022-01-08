@@ -41,6 +41,10 @@ public class OrthogonalMove extends Movement{
         int x = startX;
         int y = startY;
 
+
+        if(board[endX][endY] != null && board[x][y].getColor() == board[endX][endY].getColor())
+            return false;
+
         // calcul the distance between 2 tiles
         int distance = abs(startY-endY) > 0 ? abs(startY-endY) : abs(startX-endX);
 
@@ -48,10 +52,11 @@ public class OrthogonalMove extends Movement{
             x += offsetX;
             y += offsetY;
 
+
+            // Vérification qu'il n'y a pas de collisions sauf à la dernière case
             if (board[x][y] != null && (x != endX || y != endY)) {
                 return false;
             }
-
         }
         return true;
     }
