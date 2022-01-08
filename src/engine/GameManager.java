@@ -28,7 +28,6 @@ public class GameManager implements ChessController {
                 if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved() == 0)
                     ((SpecialPiece) board[fromX][fromY]).moved(turn);
 
-                drawBoard();
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
@@ -39,6 +38,7 @@ public class GameManager implements ChessController {
                     }
                 }
 
+                drawBoard();
                 return true;
             }
         }
