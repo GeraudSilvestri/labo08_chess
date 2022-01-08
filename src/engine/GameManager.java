@@ -2,6 +2,8 @@ package engine;
 import chess.*;
 import engine.pieces.*;
 
+import java.awt.*;
+
 
 public class GameManager implements ChessController {
     final int BOARD_SIZE = 8;
@@ -15,14 +17,15 @@ public class GameManager implements ChessController {
         view.startView();
     }
 
+    private void promotionPawn(){
+
+    }
+
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
         if(board[fromX][fromY] != null){
             if(board[fromX][fromY].canMove(fromX, fromY, toX, toY)){
                 turn++;
-
-                if(board[toX][toY] != null && board[fromX][fromY].getColor() == board[toX][toY].getColor())
-                    return false;
 
                 if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved() == 0)
                     ((SpecialPiece) board[fromX][fromY]).moved(turn);
@@ -32,6 +35,12 @@ public class GameManager implements ChessController {
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
+
+                if(toY == (board[toX][toY].getColor() == PlayerColor.WHITE ? BOARD_SIZE - 1 : 0 )){
+                    if(board[toX][toY] instanceof Pawn){
+                        System.out.println("Choisissez entre un cavalier, un fou ou une dame.");
+                    }
+                }
 
                 return true;
             }
@@ -62,20 +71,23 @@ public class GameManager implements ChessController {
             board[0][i*(BOARD_SIZE-1)] = new Rook(color, board);
             board[1][i*(BOARD_SIZE-1)] = new Knight(color, board);
             board[2][i*(BOARD_SIZE-1)] = new Bishop(color, board);
+            // création des rois/reines
+            board[3][i*(BOARD_SIZE-1)] = new Queen(color, board);
+            board[4][i*(BOARD_SIZE-1)] = new King(color, board);
             board[5][i*(BOARD_SIZE-1)] = new Bishop(color, board);
             board[6][i*(BOARD_SIZE-1)] = new Knight(color, board);
             board[7][i*(BOARD_SIZE-1)] = new Rook(color, board);
             color = PlayerColor.BLACK;
         }
 
-        // création des rois/reines
+        /*
         board[3][0] = new Queen(PlayerColor.WHITE, board);
         board[4][0] = new King(PlayerColor.WHITE, board);
-
         board[3][7] = new Queen(PlayerColor.BLACK, board);
         board[4][7] = new King(PlayerColor.BLACK, board);
-
+        */
         // création des pions
+
         color = PlayerColor.WHITE;
         for(int j = 1; j < BOARD_SIZE; j+=5) {
             for (int i = 0; i < BOARD_SIZE; ++i) {
