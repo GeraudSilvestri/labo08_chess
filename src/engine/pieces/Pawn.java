@@ -38,7 +38,7 @@ public class Pawn extends SpecialPiece{
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
         if(abs(toY-fromY) == 1 || this.getHasMoved() == 0 && abs(toY-fromY) == 2){
             // check if diagonal without adversary
-            if(fromX != toX){
+            if(abs(toX-fromX) == 1){
                 if(board[toX][toY] == null)
                     return false;
             }else{
@@ -46,7 +46,9 @@ public class Pawn extends SpecialPiece{
                 if(board[toX][toY] != null)
                     return false;
             }
-            if(abs(toY-fromY) == 2 && board[fromX][fromY + (toX-fromY)/2] != null)
+            if(abs(toY-fromY) == 2 && board[fromX][fromY + (toY-fromY)/2] != null)
+                return false;
+
             return super.canMove(fromX, fromY, toX, toY);
         }
         return false;
