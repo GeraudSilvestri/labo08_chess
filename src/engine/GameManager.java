@@ -19,7 +19,11 @@ public class GameManager implements ChessController {
 
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
-        return board.move(fromX, fromY, toX, toY, turn);
+        if(board.move(fromX, fromY, toX, toY)){
+            turn++;
+            return true;
+        }
+        return false;
     }
 
     private void promotionPawn(){

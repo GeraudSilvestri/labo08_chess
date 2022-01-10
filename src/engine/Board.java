@@ -10,6 +10,7 @@ public class Board {
     private Piece[][] board;
     private final int width;
     private final ChessView view;
+    private Piece lastMovedPiece;
 
     public Board(int width, ChessView view){
         this.width = width;
@@ -62,15 +63,14 @@ public class Board {
         }
     }
 
-    public boolean move(int fromX, int fromY, int toX, int toY, int turn) {
+    public boolean move(int fromX, int fromY, int toX, int toY) {
         if(board[fromX][fromY] != null){
             if(board[fromX][fromY].canMove(fromX, fromY, toX, toY)){
-                turn++;
 
-                if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved() == 0)
-                    ((SpecialPiece) board[fromX][fromY]).moved(turn);
+                if (board[fromX][fromY] instanceof SpecialPiece && !((SpecialPiece) board[fromX][fromY]).getHasMoved())
+                    ((SpecialPiece) board[fromX][fromY]).moved();
 
-
+                lastMovedPiece = board[toX][toY];
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
 

@@ -37,7 +37,7 @@ public class Pawn extends SpecialPiece{
      */
     @Override
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
-        if(abs(toY-fromY) == 1 || this.getHasMoved() == 0 && abs(toY-fromY) == 2){
+        if(abs(toY-fromY) == 1 || !this.getHasMoved() && abs(toY-fromY) == 2){
             // check if diagonal without adversary
             if(abs(toX-fromX) == 1){
                 if(board.at(toX, toY) == null)

@@ -6,18 +6,18 @@ import engine.Board;
 import engine.moves.Movement;
 
 public abstract class SpecialPiece extends Piece{
-    int hasMoved;
+    boolean hasMoved;
 
     public SpecialPiece(PlayerColor color, PieceType type, Board board, Movement[] moves) {
         super(color, type, board, moves);
-        hasMoved = 0;
+        hasMoved = false;
     }
 
-    public void moved(int value){
-        hasMoved =  value;
+    public void moved(){
+        hasMoved =  true;
     }
 
-    public int getHasMoved(){
+    public boolean getHasMoved(){
         return hasMoved;
     }
 }

@@ -34,10 +34,11 @@ public class King extends SpecialPiece{
             // check rook is castlingable
             if (board.at(rookX,toY) != null
                     && board.at(rookX,toY).getType() == PieceType.ROOK
-                    && ((SpecialPiece) board.at(rookX,toY)).getHasMoved() == 0) {
+                    && !((SpecialPiece) board.at(rookX, toY)).getHasMoved()) {
                 if (board.at(rookX,toY).canMove(rookX, fromY, newRookX, fromY)) {
-                    ((SpecialPiece) board.at(rookX,toY)).moved(1);
+                    ((SpecialPiece) board.at(rookX,toY)).moved();
                     //to do move piece to newRookX
+                    board.move(rookX, fromY, newRookX, fromY);
                     return true;
                 }
             }
