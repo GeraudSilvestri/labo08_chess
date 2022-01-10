@@ -10,7 +10,21 @@ public class Board {
     private Piece[][] board;
     private final int width;
     private final ChessView view;
-    private Piece lastMovedPiece;
+
+    /*private class movedPiece {
+        Piece piece;
+        int x;
+        int y;
+
+        private movedPiece(Piece piece, int toX, int toY) {
+            this.piece = piece;
+            this.x = toX;
+            this.y = toY;
+        }
+    }*/
+
+    Piece lastEatenPiece;
+    Piece lastMovedPiece;
 
     public Board(int width, ChessView view){
         this.width = width;
@@ -70,9 +84,20 @@ public class Board {
                 if (board[fromX][fromY] instanceof SpecialPiece && !((SpecialPiece) board[fromX][fromY]).getHasMoved())
                     ((SpecialPiece) board[fromX][fromY]).moved();
 
-                lastMovedPiece = board[toX][toY];
+                lastEatenPiece = board[toX][toY];//new movedPiece(board[toX][toY], toX, toY);
+                lastMovedPiece = board[fromX][fromY];//new movedPiece(board[fromX][fromY], toX, toY);
+
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
+
+                // check if own king is checked
+                if(isKingChecked(lastMovedPiece.getColor())){
+                    board[fromX][fromY] = lastMovedPiece;
+                    board[toX][toY] = lastEatenPiece;
+                    return false;
+                }else if (isKingChecked((lastMovedPiece.getColor() == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE)){
+                    view.displayMessage("Checked");
+                }
 
                 if(toY == (board[toX][toY].getColor() == PlayerColor.WHITE ? width - 1 : 0 )){
                     if(board[toX][toY] instanceof Pawn){
@@ -80,7 +105,9 @@ public class Board {
                     }
                 }
 
-                drawBoard();
+                view.removePiece(fromX, fromY);
+                view.putPiece(board[toX][toY].getType(), board[toX][toY].getColor(), toX, toY);
+
                 return true;
             }
         }
@@ -89,5 +116,36 @@ public class Board {
 
     public int getWidth(){
         return width;
+    }
+
+    private boolean isKingChecked(PlayerColor color){
+        int yKing = -1;
+        int xKing = -1;
+
+        for(int i = 0; i < width; ++i){
+            for(int j = 0; j < width; ++j){
+                if(board[i][j] != null && board[i][j].getColor() == color && board[i][j] instanceof King){
+                    xKing = i;
+                    yKing = j;
+                    break;
+                }
+            }
+        }
+
+        if(xKing != -1){
+            return cellChecked(xKing, yKing);
+        }
+        throw(new RuntimeException("Roi non trouvé"));
+    }
+
+    private boolean cellChecked(int x, int y){
+        for(int i = 0; i < width; ++i){
+            for(int j = 0; j < width; ++j){
+                if(board[i][j] != null && board[i][j].getColor() != board[x][y].getColor() && board[i][j].canMove(i,j,x,y)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
