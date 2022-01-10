@@ -36,6 +36,7 @@ public abstract class Piece {
         }
         if(valid == null)
             return false;
+
         if(valid instanceof OrthogonalMove){
             return valid.checkCollisions(fromX, fromY, toX, toY, board);
         }

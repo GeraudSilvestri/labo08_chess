@@ -4,7 +4,6 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.moves.LimitedMoves;
 import engine.moves.Movement;
-import engine.moves.OrthogonalMove;
 
 import static java.lang.Math.abs;
 
@@ -23,40 +22,26 @@ public class King extends SpecialPiece{
     }
 
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
-        // castling check left
-        if(fromX-toX == 2 && fromY-toY == 0){
+
+        if(fromX == toX && fromY == toY)
+            return false;
+        if (abs(fromX - toX) == 2 && fromY - toY == 0) {
+            boolean isLeft = fromX - toX > 0;
+            int rookX = isLeft ? 0 : board.length - 1;
+            int newRookX = fromX + (isLeft ? -1 : 1);
+
             // check rook is castlingable
-            if(board[0][toY] != null
-                && board[0][toY].getType() == PieceType.ROOK
-                && ((SpecialPiece)board[0][toY]).getHasMoved() == 0) {
-                if (board[0][toY].canMove(0, fromY, 3, fromY)) {
-                    ((SpecialPiece)board[0][toY]).moved(1);
-                    board[3][toY] = board[0][toY];
-                    board[0][toY] = null;
+            if (board[rookX][toY] != null
+                    && board[rookX][toY].getType() == PieceType.ROOK
+                    && ((SpecialPiece) board[rookX][toY]).getHasMoved() == 0) {
+                if (board[rookX][toY].canMove(rookX, fromY, newRookX, fromY)) {
+                    ((SpecialPiece) board[rookX][toY]).moved(1);
+                    board[newRookX][toY] = board[rookX][toY];
+                    board[rookX][toY] = null;
                     return true;
                 }
             }
-            return false;
         }
-        // right check castling
-        else if(fromX-toX == -2 && fromY-toY == 0){
-            if(board[7][toY] != null
-                    && board[7][toY].getType() == PieceType.ROOK
-                    && ((SpecialPiece)board[7][toY]).getHasMoved() == 0) {
-                if (board[7][toY].canMove(7, fromY, 5, fromY)) {
-                    ((SpecialPiece)board[7][toY]).moved(1);
-                    board[5][toY] = board[7][toY];
-                    board[7][toY] = null;
-                    return true;
-                }
-            }
-            return false;
-        }
-        else {
-            if (abs(toY - fromY) <= 1 || abs(toX - fromY) <= 1) {
-                return super.canMove(fromX, fromY, toX, toY);
-            }
-        }
-        return false;
+        return super.canMove(fromX,fromY,toX,toY);
     }
 }
