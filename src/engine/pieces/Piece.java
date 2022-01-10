@@ -2,16 +2,17 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.Board;
 import engine.moves.Movement;
 import engine.moves.OrthogonalMove;
 
 public abstract class Piece {
     private final PlayerColor color;
     private final PieceType type;
-    private Movement[] moves;
-    protected Piece[][] board;
+    private final Movement[] moves;
+    protected Board board;
 
-    public Piece(PlayerColor color, PieceType type, Piece[][] board, Movement[] moves){
+    public Piece(PlayerColor color, PieceType type, Board board, Movement[] moves){
         this.color = color;
         this.type = type;
         this.board = board;

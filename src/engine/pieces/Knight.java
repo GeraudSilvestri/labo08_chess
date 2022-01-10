@@ -2,11 +2,12 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.Board;
 import engine.moves.LimitedMoves;
 import engine.moves.Movement;
 
 public class Knight extends Piece{
-    public Knight(PlayerColor color, Piece[][] board) {
+    public Knight(PlayerColor color, Board board) {
         super(color, PieceType.KNIGHT, board,  new Movement[] {
                 new LimitedMoves(1,2),
                 new LimitedMoves(-1,2),

@@ -1,6 +1,6 @@
 package engine.moves;
 
-import engine.pieces.Piece;
+import engine.Board;
 
 import static java.lang.Math.abs;
 
@@ -37,12 +37,12 @@ public class OrthogonalMove extends Movement{
     }
 
     @Override
-    public boolean checkCollisions(int startX, int startY, int endX, int endY, Piece[][] board) {
+    public boolean checkCollisions(int startX, int startY, int endX, int endY, Board board) {
         int x = startX;
         int y = startY;
 
 
-        if(board[endX][endY] != null && board[x][y].getColor() == board[endX][endY].getColor())
+        if(board.at(endX,endY) != null && board.at(x,y).getColor() == board.at(endX,endY).getColor())
             return false;
 
         // calcul the distance between 2 tiles
@@ -54,7 +54,7 @@ public class OrthogonalMove extends Movement{
 
 
             // Vérification qu'il n'y a pas de collisions sauf à la dernière case
-            if (board[x][y] != null && (x != endX || y != endY)) {
+            if (board.at(x,y) != null && (x != endX || y != endY)) {
                 return false;
             }
         }

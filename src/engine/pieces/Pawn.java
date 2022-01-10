@@ -2,6 +2,7 @@ package engine.pieces;
 
 import chess.PieceType;
 import chess.PlayerColor;
+import engine.Board;
 import engine.moves.LimitedMoves;
 import engine.moves.Movement;
 import engine.moves.OrthogonalMove;
@@ -9,7 +10,7 @@ import engine.moves.OrthogonalMove;
 import static java.lang.Math.abs;
 
 public class Pawn extends SpecialPiece{
-    public Pawn(PlayerColor color, Piece[][] board) {
+    public Pawn(PlayerColor color, Board board) {
             super(color, PieceType.PAWN, board, color == PlayerColor.WHITE ?
                     new Movement[]{
                             new LimitedMoves(0, 1),
@@ -39,14 +40,14 @@ public class Pawn extends SpecialPiece{
         if(abs(toY-fromY) == 1 || this.getHasMoved() == 0 && abs(toY-fromY) == 2){
             // check if diagonal without adversary
             if(abs(toX-fromX) == 1){
-                if(board[toX][toY] == null)
+                if(board.at(toX, toY) == null)
                     return false;
             }else{
                 // check if forward with adversary
-                if(board[toX][toY] != null)
+                if(board.at(toX, toY) != null)
                     return false;
             }
-            if(abs(toY-fromY) == 2 && board[fromX][fromY + (toY-fromY)/2] != null)
+            if(abs(toY-fromY) == 2 && board.at(fromX, fromY + (toY-fromY)/2) != null)
                 return false;
 
             return super.canMove(fromX, fromY, toX, toY);

@@ -8,12 +8,16 @@ import javax.swing.text.View;
 
 public class Board {
     private Piece[][] board;
-    private int width;
-    private ChessView view;
+    private final int width;
+    private final ChessView view;
 
     public Board(int width, ChessView view){
         this.width = width;
-        view = view;
+        this.view = view;
+    }
+
+    public Piece at(int x, int y){
+        return board[x][y];
     }
 
     /**
@@ -25,22 +29,22 @@ public class Board {
 
         //création des pièces
         for(int i = 0; i < 2; ++i) {
-            board[0][i*(width-1)] = new Rook(color, board);
-            board[1][i*(width-1)] = new Knight(color, board);
-            board[2][i*(width-1)] = new Bishop(color, board);
+            board[0][i*(width-1)] = new Rook(color, this);
+            board[1][i*(width-1)] = new Knight(color, this);
+            board[2][i*(width-1)] = new Bishop(color, this);
             // création des rois/reines
-            board[3][i*(width-1)] = new Queen(color, board);
-            board[4][i*(width-1)] = new King(color, board);
-            board[5][i*(width-1)] = new Bishop(color, board);
-            board[6][i*(width-1)] = new Knight(color, board);
-            board[7][i*(width-1)] = new Rook(color, board);
+            board[3][i*(width-1)] = new Queen(color, this);
+            board[4][i*(width-1)] = new King(color, this);
+            board[5][i*(width-1)] = new Bishop(color, this);
+            board[6][i*(width-1)] = new Knight(color, this);
+            board[7][i*(width-1)] = new Rook(color, this);
             color = PlayerColor.BLACK;
         }
 
         color = PlayerColor.WHITE;
         for(int j = 1; j < width; j+=5) {
             for (int i = 0; i < width; ++i) {
-                board[i][j] = new Pawn(color, board);
+                board[i][j] = new Pawn(color, this);
             }
             color = PlayerColor.BLACK;
         }
@@ -81,5 +85,9 @@ public class Board {
             }
         }
         return false;
+    }
+
+    public int getWidth(){
+        return width;
     }
 }
