@@ -1,12 +1,13 @@
 package engine.pieces;
 
+import chess.ChessView;
 import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.moves.Movement;
 import engine.moves.OrthogonalMove;
 
-public abstract class Piece {
+public abstract class Piece implements ChessView.UserChoice{
     private final PlayerColor color;
     private final PieceType type;
     private final Movement[] moves;
@@ -19,6 +20,15 @@ public abstract class Piece {
         this.moves = moves;
     }
 
+    @Override
+    public String textValue(){
+        return getClass().getSimpleName();
+    }
+
+    public String toString(){
+        return textValue();
+    }
+
     public PlayerColor getColor() {
         return color;
     }
@@ -29,6 +39,8 @@ public abstract class Piece {
 
     public boolean canMove(int fromX, int fromY, int toX, int toY){
         Movement valid = null;
+
+        // Vérifie que les coordonnées entrées par l'utilisateur permettent un mouvement plausible pour une pièce donnée
         for(Movement m : moves){
             if(m.canMove(fromX, fromY, toX, toY)){
                 valid = m;

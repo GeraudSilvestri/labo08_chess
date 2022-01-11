@@ -99,9 +99,16 @@ public class Board {
                     view.displayMessage("Checked");
                 }
 
-                if(toY == (board[toX][toY].getColor() == PlayerColor.WHITE ? width - 1 : 0 )){
-                    if(board[toX][toY] instanceof Pawn){
-                        System.out.println("Choisissez entre un cavalier, un fou ou une dame.");
+                // Pawn promotion
+                PlayerColor currentPieceColor = board[toX][toY].getColor();
+                if (toY == (currentPieceColor == PlayerColor.WHITE ? width - 1 : 0)) {
+                    if (board[toX][toY] instanceof Pawn) {
+                        board[toX][toY] = view.askUser("Promotion", "Switch", new Knight(currentPieceColor, this),
+                                new Bishop(currentPieceColor, this), new Rook(currentPieceColor, this), new Queen(currentPieceColor, this));
+
+                        if (board[toX][toY] instanceof SpecialPiece) {
+                            ((SpecialPiece) board[toX][toY]).moved();
+                        }
                     }
                 }
 
