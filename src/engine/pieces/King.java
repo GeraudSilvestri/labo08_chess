@@ -61,7 +61,7 @@ public class King extends SpecialPiece{
                 if (board.at(rookX,toY).canMove(rookX, fromY, newRookX, fromY)) {
                     //vérifie que le roi ne passe pas en échecs
                     for (int i = 0; i <= 2; ++i) {
-                        if (board.isCellChecked(fromX + (isLeft ? -i : i), fromY))
+                        if (board.isCellChecked(fromX + (isLeft ? -i : i), fromY, board.at(fromX,fromY).getColor()));
                             return false;
                     }
                     // bouge la tour

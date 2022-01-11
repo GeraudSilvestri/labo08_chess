@@ -189,7 +189,7 @@ public class Board {
         }
 
         if(xKing != -1){
-            return isCellChecked(xKing, yKing);
+            return isCellChecked(xKing, yKing, color);
         }
         throw(new RuntimeException("Roi non trouvé"));
     }
@@ -200,15 +200,22 @@ public class Board {
      * @param y position Y de la case
      * @return ladite case est-elle échec
      */
-    public boolean isCellChecked(int x, int y){
-        for(int i = 0; i < width; ++i){
-            for(int j = 0; j < width; ++j){
+    public boolean isCellChecked(int x, int y, PlayerColor color) {
+
+        // création d'une pièce temporaire pour pouvoir tester avec un pion
+        Piece temp = board[x][y];
+        board[x][y] = new King(color, this);
+
+        for (int i = 0; i < width; ++i) {
+            for (int j = 0; j < width; ++j) {
                 // si une pièce adverse peut aller sur la case, elle est en échec
-                if(board[i][j] != null && board[i][j].getColor() != board[x][y].getColor() && board[i][j].canMove(i,j,x,y)){
+                if (board[i][j] != null && board[i][j].getColor() != board[x][y].getColor() && board[i][j].canMove(i, j, x, y)) {
+                    board[x][y] = temp;
                     return true;
                 }
             }
         }
+        board[x][y] = temp;
         return false;
     }
 
