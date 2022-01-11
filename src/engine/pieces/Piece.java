@@ -7,12 +7,25 @@ import engine.Board;
 import engine.moves.Movement;
 import engine.moves.OrthogonalMove;
 
+/**
+ * gère les différents types de pièces d'un jeu d'échec
+ *
+ * @author Géraud Silvestri
+ * @author Loïc Rosset
+ */
 public abstract class Piece implements ChessView.UserChoice{
     private final PlayerColor color;
     private final PieceType type;
     private final Movement[] moves;
     protected Board board;
 
+    /**
+     * constructeur
+     * @param color couleur de la pièce (blanc ou noir)
+     * @param type type de pièce
+     * @param board échiquier sur lequel est la pièce
+     * @param moves tableau des mouvements possible pour une pièce
+     */
     public Piece(PlayerColor color, PieceType type, Board board, Movement[] moves){
         this.color = color;
         this.type = type;
@@ -20,23 +33,47 @@ public abstract class Piece implements ChessView.UserChoice{
         this.moves = moves;
     }
 
+    /**
+     * retourne le nom de la pièce en String
+     * @return nom de la pièce en String
+     */
     @Override
     public String textValue(){
         return getClass().getSimpleName();
     }
 
+    /**
+     * retourne le nom de la pièce en String
+     * @return nom de la pièce en String
+     */
     public String toString(){
         return textValue();
     }
 
+    /**
+     * retourne la couleur de la pièce
+     * @return couleur de la pièce
+     */
     public PlayerColor getColor() {
         return color;
     }
 
+    /**
+     * retourne le type de la pièce
+     * @return type de la pièce
+     */
     public PieceType getType() {
         return type;
     }
 
+    /**
+     * vérifie qu'une pièce peu bouger en fonction de la liste de mouvements passée
+     * @param fromX position X initiale
+     * @param fromY position Y initiale
+     * @param toX position X finale
+     * @param toY position Y finale
+     * @return le mouvement est-il valide ou non
+     */
     public boolean canMove(int fromX, int fromY, int toX, int toY){
         Movement valid = null;
 
@@ -50,6 +87,7 @@ public abstract class Piece implements ChessView.UserChoice{
         if(valid == null)
             return false;
 
+        // vérifie que le mouvement valide n'as pas de collisions
         if(valid instanceof OrthogonalMove){
             return valid.checkCollisions(fromX, fromY, toX, toY, board);
         }

@@ -4,31 +4,58 @@ import chess.ChessView;
 import chess.PlayerColor;
 import engine.pieces.*;
 
+/**
+ * Gère l'échiquier
+ *
+ * @author Géraud Silvestri
+ * @author Loïc Rosset
+ */
 public class Board {
     private Piece[][] board;
     private final int width;
     private final ChessView view;
 
-    private class movedPiece {
+    /**
+     * Gère une pièce ayant effectué un mouvement
+     * Nécessaire pour pouvoir annuler un mouvement et remettre la pièce à sa place initiale
+     */
+    private class MovedPiece {
         Piece piece;
         int x;
         int y;
 
-        private movedPiece(Piece piece, int toX, int toY) {
+        /**
+         * Constructeur
+         * @param piece pièce concernée
+         * @param x position x
+         * @param y position y
+         */
+        private MovedPiece(Piece piece, int x, int y) {
             this.piece = piece;
-            this.x = toX;
-            this.y = toY;
+            this.x = x;
+            this.y = y;
         }
     }
 
     Piece lastEatenPiece;
-    movedPiece lastMovedPiece;
+    MovedPiece lastMovedPiece;
 
+    /**
+     * Constructeur
+     * @param width taille de l'échiquier, communément 8
+     * @param view view servant à la gestion de l'interface de l'échiquier
+     */
     public Board(int width, ChessView view){
         this.width = width;
         this.view = view;
     }
 
+    /**
+     * retourne une pièce à l'index donnée
+     * @param x index x
+     * @param y index y
+     * @return pièce concernée
+     */
     public Piece at(int x, int y){
         return board[x][y];
     }
@@ -54,6 +81,7 @@ public class Board {
             color = PlayerColor.BLACK;
         }
 
+        // création des pions
         color = PlayerColor.WHITE;
         for(int j = 1; j < width; j+=5) {
             for (int i = 0; i < width; ++i) {
@@ -63,6 +91,9 @@ public class Board {
         }
     }
 
+    /**
+     * ajoute les pièces dans la vue
+     */
     public void drawBoard(){
         for(int i = 0; i < width; ++i){
             for(int j = 0; j < width; ++j){
@@ -75,32 +106,44 @@ public class Board {
         }
     }
 
+    /**
+     * gère les mouvements effectués par l'utilisateur
+     * @param fromX position X de départ
+     * @param fromY position Y de départ
+     * @param toX position X d'arrivée
+     * @param toY position Y d'arrivée
+     * @param playerTurn couleur du joueur devant faire le tour
+     * @return si le déplacement a été fait ou non
+     */
     public boolean move(int fromX, int fromY, int toX, int toY, PlayerColor playerTurn) {
+        // vérifie que la position initiale correspond à une pièce, que la pièce soit de la couleur du joueur
+        // et qu'un déplacement ai été fait
         if(board[fromX][fromY] != null && board[fromX][fromY].getColor() == playerTurn && (fromX != toX || fromY != toY)){
+
             if(board[fromX][fromY].canMove(fromX, fromY, toX, toY)){
 
+                // si la pièce est un roi, une tour ou un pion, on dit qu'elle a bougé
                 if (board[fromX][fromY] instanceof SpecialPiece && !((SpecialPiece) board[fromX][fromY]).getHasMoved())
                     ((SpecialPiece) board[fromX][fromY]).moved();
 
-                lastEatenPiece = board[toX][toY];//new movedPiece(board[toX][toY], toX, toY);
-                lastMovedPiece = new movedPiece(board[fromX][fromY], toX, toY);
+                lastEatenPiece = board[toX][toY];
+                lastMovedPiece = new MovedPiece(board[fromX][fromY], toX, toY);
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
 
-                // check if own king is checked
+                // check si le roi du joueur est en échec
                 if(isKingChecked(lastMovedPiece.piece.getColor())){
                     board[fromX][fromY] = lastMovedPiece.piece;
                     board[toX][toY] = lastEatenPiece;
                     return false;
                 }
 
-                // Pawn promotion
-                PlayerColor currentPieceColor = board[toX][toY].getColor();
-                if (toY == (currentPieceColor == PlayerColor.WHITE ? width - 1 : 0)) {
+                // promotion de pion
+                if (toY == (playerTurn == PlayerColor.WHITE ? width - 1 : 0)) {
                     if (board[toX][toY] instanceof Pawn) {
-                        board[toX][toY] = view.askUser("Promotion", "Switch", new Knight(currentPieceColor, this),
-                                new Bishop(currentPieceColor, this), new Rook(currentPieceColor, this), new Queen(currentPieceColor, this));
+                        board[toX][toY] = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
+                                new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
 
                         if (board[toX][toY] instanceof SpecialPiece) {
                             ((SpecialPiece) board[toX][toY]).moved();
@@ -108,6 +151,7 @@ public class Board {
                     }
                 }
 
+                // met a jour la vue uniquement avec les pièces ayant bougé
                 view.removePiece(fromX, fromY);
                 view.putPiece(board[toX][toY].getType(), board[toX][toY].getColor(), toX, toY);
 
@@ -117,10 +161,19 @@ public class Board {
         return false;
     }
 
+    /**
+     * retourne la largeur de l'échiquier
+     * @return ladite largeur
+     */
     public int getWidth(){
         return width;
     }
 
+    /**
+     * vérifie qu'un roi d'une couleur est en échec
+     * @param color couleur du joueur
+     * @return true si le roi est en échec
+     */
     public boolean isKingChecked(PlayerColor color){
         int yKing = -1;
         int xKing = -1;
@@ -136,14 +189,21 @@ public class Board {
         }
 
         if(xKing != -1){
-            return cellChecked(xKing, yKing);
+            return isCellChecked(xKing, yKing);
         }
         throw(new RuntimeException("Roi non trouvé"));
     }
 
-    private boolean cellChecked(int x, int y){
+    /**
+     * vérifie qu'une case est en échec ou non
+     * @param x position X de la case
+     * @param y position Y de la case
+     * @return ladite case est-elle échec
+     */
+    public boolean isCellChecked(int x, int y){
         for(int i = 0; i < width; ++i){
             for(int j = 0; j < width; ++j){
+                // si une pièce adverse peut aller sur la case, elle est en échec
                 if(board[i][j] != null && board[i][j].getColor() != board[x][y].getColor() && board[i][j].canMove(i,j,x,y)){
                     return true;
                 }
@@ -152,6 +212,11 @@ public class Board {
         return false;
     }
 
+    /**
+     * vérifie que la pièce voulant être mangée en passant est bel et bien mangeable
+     * @param piece pièce à vérifiée
+     * @return la pièce est-elle mangeable en passant
+     */
     public boolean checkEnPassant(Pawn piece){
         if(lastMovedPiece.piece == piece && piece.isEnPassantAble()){
             board[lastMovedPiece.x][lastMovedPiece.y] = null;

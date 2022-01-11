@@ -8,7 +8,20 @@ import engine.moves.Movement;
 
 import static java.lang.Math.abs;
 
+/**
+ * Implémentation de la classe SpecialPiece pour le roi
+ * Le roi est une pièce spéciale utilisée pour le roque
+ *
+ * @author Géraud Silvestri
+ * @author Loïc Rosset
+ */
 public class King extends SpecialPiece{
+
+    /**
+     * crée un roi avec ses différents déplacements possible
+     * @param color couleur de la pièce
+     * @param board échiquier sur lequel est la pièce
+     */
     public King(PlayerColor color, Board board) {
         super(color, PieceType.KING, board,  new Movement[] {
                 new LimitedMoves(0,1),
@@ -22,22 +35,37 @@ public class King extends SpecialPiece{
         });
     }
 
+    /**
+     * vérifie que le déplacement du roi est valable
+     * @param fromX position X initiale
+     * @param fromY position Y initiale
+     * @param toX position X finale
+     * @param toY position Y finale
+     * @return le déplacement est-il valide
+     */
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
 
+        // pas de déplacement
         if(fromX == toX && fromY == toY)
             return false;
+        // vérifie si un roque est faisable
         if (abs(fromX - toX) == 2 && fromY - toY == 0) {
             boolean isLeft = fromX - toX > 0;
             int rookX = isLeft ? 0 : board.getWidth() - 1;
             int newRookX = fromX + (isLeft ? -1 : 1);
 
-            // check rook is castlingable
+            // vérifie que la tour est roquable
             if (board.at(rookX,toY) != null
                     && board.at(rookX,toY).getType() == PieceType.ROOK
                     && !((SpecialPiece) board.at(rookX, toY)).getHasMoved()) {
                 if (board.at(rookX,toY).canMove(rookX, fromY, newRookX, fromY)) {
+                    //vérifie que le roi ne passe pas en échecs
+                    for (int i = 0; i <= 2; ++i) {
+                        if (board.isCellChecked(fromX + (isLeft ? -i : i), fromY))
+                            return false;
+                    }
+                    // bouge la tour
                     ((SpecialPiece) board.at(rookX,toY)).moved();
-                    //to do move piece to newRookX
                     board.move(rookX, fromY, newRookX, fromY, getColor());
                     return true;
                 }

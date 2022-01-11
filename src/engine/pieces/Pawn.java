@@ -5,10 +5,15 @@ import chess.PlayerColor;
 import engine.Board;
 import engine.moves.LimitedMoves;
 import engine.moves.Movement;
-import engine.moves.OrthogonalMove;
 
 import static java.lang.Math.abs;
 
+/**
+ * Implémentation de la classe SpecialPiece pour le pion
+ *
+ * @author Géraud Silvestri
+ * @author Loïc Rosset
+ */
 public class Pawn extends SpecialPiece{
     boolean enPassantAble;
 
@@ -16,6 +21,11 @@ public class Pawn extends SpecialPiece{
         return enPassantAble;
     }
 
+    /**
+     * crée un pion avec ses différents déplacements possible
+     * @param color couleur de la pièce
+     * @param board échiquier sur lequel est la pièce
+     */
     public Pawn(PlayerColor color, Board board) {
             super(color, PieceType.PAWN, board, color == PlayerColor.WHITE ?
                     new Movement[]{
@@ -45,28 +55,29 @@ public class Pawn extends SpecialPiece{
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
         int distance = abs(toY-fromY);
 
+        // si il n'y a pas de déplacements
         if(fromX == toX && fromY == toY){
             return false;
         }
         if(distance == 1) {
-            // check no one forward
+            // vérifie qu'on ne mange rien
             if (toX == fromX && board.at(toX, toY) != null)
                 return false;
 
-                // check ennemy on diagonal
+            // vérifie que lors d'un déplacement en diagonal, on mange une pièce via en passant ou non
             else if (toX != fromX && board.at(toX, toY) == null) {
                 // check en passant
                 Piece temp = board.at(toX, toY + (getColor() == PlayerColor.WHITE ? -1 : 1));
                 if (temp instanceof Pawn && temp.getColor() != getColor()) {
                     return board.checkEnPassant((Pawn)temp);
                 }
-                // si pas en passant alors false
                 else {
                     return false;
                 }
             }
         }
         else if(distance == 2) {
+            // mets que la pièce peut être mangée en passant
             if(!this.getHasMoved() && board.at(fromX, fromY + (toY-fromY)/2) == null){
                 enPassantAble = true;
             }else{

@@ -1,8 +1,12 @@
 package engine;
 import chess.*;
-import engine.pieces.*;
 
-
+/**
+ * Classe gérant le déroulement d'une partie d'échecs
+ *
+ * @authors Géraud Silvestri
+ * @authors Loïc Rosset
+ */
 public class GameManager implements ChessController {
     final int BOARD_SIZE = 8;
     int turn = 0;
@@ -10,6 +14,10 @@ public class GameManager implements ChessController {
     Board board;
     PlayerColor playerTurn;
 
+    /**
+     * lance la partie
+     * @param view la vue à utiliser
+     */
     @Override
     public void start(ChessView view) {
         this.view = view;
@@ -18,6 +26,14 @@ public class GameManager implements ChessController {
         newGame();
     }
 
+    /**
+     * Effectue le déplacement d'une pièce après vérifications
+     * @param fromX postion X de départ
+     * @param fromY postion Y de départ
+     * @param toX position X de fin
+     * @param toY position Y de fin
+     * @return ledit déplacement a-t'il été effectué
+     */
     @Override
     public boolean move(int fromX, int fromY, int toX, int toY) {
         boolean turnIsGood = false;
@@ -28,18 +44,15 @@ public class GameManager implements ChessController {
         }
         String str = "Au tour des "
                 + (playerTurn == PlayerColor.WHITE ? "blancs" : "noirs")
-                + (board.isKingChecked(playerTurn) ? " (Checked!)" : "");
+                + (board.isKingChecked(playerTurn) ? " (Check!)" : "");
         view.displayMessage(str);
 
         return turnIsGood;
     }
 
-    private void promotionPawn(){
-
-    }
-
-
-
+    /**
+     * lance une nouvelle partie, génère l'échiquier et place les pièces
+     */
     @Override
     public void newGame() {
         board.initBoard();
