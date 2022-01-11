@@ -4,8 +4,6 @@ import chess.ChessView;
 import chess.PlayerColor;
 import engine.pieces.*;
 
-import javax.swing.text.View;
-
 public class Board {
     private Piece[][] board;
     private final int width;
@@ -77,8 +75,8 @@ public class Board {
         }
     }
 
-    public boolean move(int fromX, int fromY, int toX, int toY) {
-        if(board[fromX][fromY] != null){
+    public boolean move(int fromX, int fromY, int toX, int toY, PlayerColor playerTurn) {
+        if(board[fromX][fromY] != null && board[fromX][fromY].getColor() == playerTurn && (fromX != toX || fromY != toY)){
             if(board[fromX][fromY].canMove(fromX, fromY, toX, toY)){
 
                 if (board[fromX][fromY] instanceof SpecialPiece && !((SpecialPiece) board[fromX][fromY]).getHasMoved())
@@ -95,8 +93,6 @@ public class Board {
                     board[fromX][fromY] = lastMovedPiece.piece;
                     board[toX][toY] = lastEatenPiece;
                     return false;
-                }else if (isKingChecked((lastMovedPiece.piece.getColor() == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE)){
-                    view.displayMessage("Checked");
                 }
 
                 // Pawn promotion
@@ -125,7 +121,7 @@ public class Board {
         return width;
     }
 
-    private boolean isKingChecked(PlayerColor color){
+    public boolean isKingChecked(PlayerColor color){
         int yKing = -1;
         int xKing = -1;
 

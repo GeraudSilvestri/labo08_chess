@@ -38,7 +38,7 @@ public class King extends SpecialPiece{
                 if (board.at(rookX,toY).canMove(rookX, fromY, newRookX, fromY)) {
                     ((SpecialPiece) board.at(rookX,toY)).moved();
                     //to do move piece to newRookX
-                    board.move(rookX, fromY, newRookX, fromY);
+                    board.move(rookX, fromY, newRookX, fromY, getColor());
                     return true;
                 }
             }
