@@ -11,7 +11,7 @@ public class Board {
     private final int width;
     private final ChessView view;
 
-    /*private class movedPiece {
+    private class movedPiece {
         Piece piece;
         int x;
         int y;
@@ -21,10 +21,10 @@ public class Board {
             this.x = toX;
             this.y = toY;
         }
-    }*/
+    }
 
     Piece lastEatenPiece;
-    Piece lastMovedPiece;
+    movedPiece lastMovedPiece;
 
     public Board(int width, ChessView view){
         this.width = width;
@@ -85,17 +85,17 @@ public class Board {
                     ((SpecialPiece) board[fromX][fromY]).moved();
 
                 lastEatenPiece = board[toX][toY];//new movedPiece(board[toX][toY], toX, toY);
-                lastMovedPiece = board[fromX][fromY];//new movedPiece(board[fromX][fromY], toX, toY);
+                lastMovedPiece = new movedPiece(board[fromX][fromY], toX, toY);
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
 
                 // check if own king is checked
-                if(isKingChecked(lastMovedPiece.getColor())){
-                    board[fromX][fromY] = lastMovedPiece;
+                if(isKingChecked(lastMovedPiece.piece.getColor())){
+                    board[fromX][fromY] = lastMovedPiece.piece;
                     board[toX][toY] = lastEatenPiece;
                     return false;
-                }else if (isKingChecked((lastMovedPiece.getColor() == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE)){
+                }else if (isKingChecked((lastMovedPiece.piece.getColor() == PlayerColor.WHITE) ? PlayerColor.BLACK : PlayerColor.WHITE)){
                     view.displayMessage("Checked");
                 }
 
@@ -145,6 +145,15 @@ public class Board {
                     return true;
                 }
             }
+        }
+        return false;
+    }
+
+    public boolean checkEnPassant(Pawn piece){
+        if(lastMovedPiece.piece == piece && piece.isEnPassantAble()){
+            board[lastMovedPiece.x][lastMovedPiece.y] = null;
+            view.removePiece(lastMovedPiece.x, lastMovedPiece.y);
+            return true;
         }
         return false;
     }

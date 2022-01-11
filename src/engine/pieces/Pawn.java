@@ -10,6 +10,12 @@ import engine.moves.OrthogonalMove;
 import static java.lang.Math.abs;
 
 public class Pawn extends SpecialPiece{
+    boolean enPassantAble;
+
+    public boolean isEnPassantAble() {
+        return enPassantAble;
+    }
+
     public Pawn(PlayerColor color, Board board) {
             super(color, PieceType.PAWN, board, color == PlayerColor.WHITE ?
                     new Movement[]{
@@ -24,7 +30,7 @@ public class Pawn extends SpecialPiece{
                             new LimitedMoves(-1, -1),
                             new LimitedMoves(0, -2)
             });
-
+        enPassantAble = false;
     }
 
     /**
@@ -37,21 +43,37 @@ public class Pawn extends SpecialPiece{
      */
     @Override
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
-        if(abs(toY-fromY) == 1 || !this.getHasMoved() && abs(toY-fromY) == 2){
-            // check if diagonal without adversary
-            if(abs(toX-fromX) == 1){
-                if(board.at(toX, toY) == null)
-                    return false;
-            }else{
-                // check if forward with adversary
-                if(board.at(toX, toY) != null)
-                    return false;
-            }
-            if(abs(toY-fromY) == 2 && board.at(fromX, fromY + (toY-fromY)/2) != null)
+        int distance = abs(toY-fromY);
+
+        if(fromX == toX && fromY == toY){
+            return false;
+        }
+        if(distance == 1) {
+            // check no one forward
+            if (toX == fromX && board.at(toX, toY) != null)
                 return false;
 
-            return super.canMove(fromX, fromY, toX, toY);
+                // check ennemy on diagonal
+            else if (toX != fromX && board.at(toX, toY) == null) {
+                // check en passant
+                Piece temp = board.at(toX, toY + (getColor() == PlayerColor.WHITE ? -1 : 1));
+                if (temp instanceof Pawn && temp.getColor() != getColor()) {
+                    return board.checkEnPassant((Pawn)temp);
+                }
+                // si pas en passant alors false
+                else {
+                    return false;
+                }
+            }
         }
-        return false;
+        else if(distance == 2) {
+            if(!this.getHasMoved() && board.at(fromX, fromY + (toY-fromY)/2) == null){
+                enPassantAble = true;
+            }else{
+                return false;
+            }
+        }
+
+        return super.canMove(fromX, fromY, toX, toY);
     }
 }
