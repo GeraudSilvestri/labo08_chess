@@ -31,7 +31,7 @@ public class OrthogonalMove extends Movement{
         int y = startY;
 
         if(x != endX || y != endY) {
-            while (x >= 0 && x < board.width() && y >= 0 && y < board.width()) {
+            while (x >= 0 && x < board.getWidth() && y >= 0 && y < board.getWidth()) {
                 x += offsetX;
                 y += offsetY;
 
