@@ -45,9 +45,6 @@ public class King extends SpecialPiece{
      */
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
 
-        // pas de déplacement
-        if(fromX == toX && fromY == toY)
-            return false;
         // vérifie si un roque est faisable
         if (abs(fromX - toX) == 2 && fromY - toY == 0) {
             boolean isLeft = fromX - toX > 0;
@@ -61,7 +58,7 @@ public class King extends SpecialPiece{
                 if (board.at(rookX,toY).canMove(rookX, fromY, newRookX, fromY)) {
                     //vérifie que le roi ne passe pas en échecs
                     for (int i = 0; i <= 2; ++i) {
-                        if (board.isCellChecked(fromX + (isLeft ? -i : i), fromY, board.at(fromX,fromY).getColor()));
+                        if (board.isCellChecked(fromX + (isLeft ? -i : i), fromY, board.at(fromX,fromY).getColor()))
                             return false;
                     }
                     // bouge la tour

@@ -79,18 +79,11 @@ public abstract class Piece implements ChessView.UserChoice{
 
         // Vérifie que les coordonnées entrées par l'utilisateur permettent un mouvement plausible pour une pièce donnée
         for(Movement m : moves){
-            if(m.canMove(fromX, fromY, toX, toY)){
+            if(m.canMove(fromX, fromY, toX, toY, board)){
                 valid = m;
                 break;
             }
         }
-        if(valid == null)
-            return false;
-
-        // vérifie que le mouvement valide n'as pas de collisions
-        if(valid instanceof OrthogonalMove){
-            return valid.checkCollisions(fromX, fromY, toX, toY, board);
-        }
-        return true;
+        return valid != null;
     }
 }

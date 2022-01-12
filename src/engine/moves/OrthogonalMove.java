@@ -25,22 +25,26 @@ public class OrthogonalMove extends Movement{
      * @param endY final Y position
      * @return wether the move is valid or not
      */
-    public boolean canMove(int startX, int startY, int endX, int endY){
+    public boolean canMove(int startX, int startY, int endX, int endY, Board board){
         boolean move = false;
         int x = startX;
         int y = startY;
+        int distance = abs(startX-endX) > 0 ? abs(startX-endX) : abs(startY-endY);
 
-        if(x != endX || y != endY) {
-            while (x >= 0 && x < 8 && y >= 0 && y < 8) {
-                x += offsetX;
-                y += offsetY;
+        for(int i = 0; i < distance; ++i) {
+            x += offsetX;
+            y += offsetY;
 
-                if (x == endX && y == endY) {
-                    move = true;
-                    break;
-                }
+            if (x == endX && y == endY) {
+                move = true;
+                break;
+            }
+
+            if(board.at(x,y) != null){
+                break;
             }
         }
+
         return move;
     }
 
@@ -53,11 +57,10 @@ public class OrthogonalMove extends Movement{
      * @param board échiquier sur lequel la pièce se déplace
      * @return le passage est-il libre ou non
      */
-    @Override
+    /*@Override
     public boolean checkCollisions(int startX, int startY, int endX, int endY, Board board) {
         int x = startX;
         int y = startY;
-
 
         // la case d'arrivée à une pièce de la même couleur
         if(board.at(endX,endY) != null && board.at(x,y).getColor() == board.at(endX,endY).getColor())
@@ -71,10 +74,10 @@ public class OrthogonalMove extends Movement{
             y += offsetY;
 
             // Vérification qu'il n'y a pas de collisions sauf à la dernière case
-            if (board.at(x,y) != null && (x != endX || y != endY)) {
+            if (board.at(x,y) != null) {
                 return false;
             }
         }
         return true;
-    }
+    }*/
 }

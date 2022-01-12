@@ -55,11 +55,7 @@ public class Pawn extends SpecialPiece{
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
         int distance = abs(toY-fromY);
 
-        // si il n'y a pas de déplacements
-        if(fromX == toX && fromY == toY){
-            return false;
-        }
-        if(distance == 1) {
+        /*if(distance == 1) {
             // vérifie qu'on ne mange rien
             if (toX == fromX && board.at(toX, toY) != null)
                 return false;
@@ -83,7 +79,7 @@ public class Pawn extends SpecialPiece{
             }else{
                 return false;
             }
-        }
+        }*/
 
         return super.canMove(fromX, fromY, toX, toY);
     }

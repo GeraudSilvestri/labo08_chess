@@ -54,9 +54,12 @@ public class Board {
      * retourne une pièce à l'index donnée
      * @param x index x
      * @param y index y
-     * @return pièce concernée
+     * @return pièce concernée ou null si l'index est outOfBounds
      */
     public Piece at(int x, int y){
+        //if(x >= width || x < 0 || y >= width || y < 0)
+          //  return null;
+
         return board[x][y];
     }
 
@@ -118,22 +121,29 @@ public class Board {
     public boolean move(int fromX, int fromY, int toX, int toY, PlayerColor playerTurn) {
         // vérifie que la position initiale correspond à une pièce, que la pièce soit de la couleur du joueur
         // et qu'un déplacement ai été fait
-        if(board[fromX][fromY] != null && board[fromX][fromY].getColor() == playerTurn && (fromX != toX || fromY != toY)){
+        /*if(board[fromX][fromY] != null
+            && board[fromX][fromY].getColor() == playerTurn
+            && (board[toX][toY] == null || board[toX][toY].getColor() != playerTurn)
+            && (toX != fromX || toY != fromY)) {*/
 
-            if(board[fromX][fromY].canMove(fromX, fromY, toX, toY)){
+        if(board[fromX][fromY] == null ||board[fromX][fromY].getColor() != playerTurn)
+            return false;
 
-                // si la pièce est un roi, une tour ou un pion, on dit qu'elle a bougé
-                if (board[fromX][fromY] instanceof SpecialPiece && !((SpecialPiece) board[fromX][fromY]).getHasMoved())
-                    ((SpecialPiece) board[fromX][fromY]).moved();
+            if (board[fromX][fromY].canMove(fromX, fromY, toX, toY)) {
 
                 lastEatenPiece = board[toX][toY];
                 lastMovedPiece = new MovedPiece(board[fromX][fromY], toX, toY);
+
+
+                // si la pièce est un roi, une tour ou un pion, on dit qu'elle a bougé
+                if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved())
+                    ((SpecialPiece) board[fromX][fromY]).moved();
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
 
                 // check si le roi du joueur est en échec
-                if(isKingChecked(lastMovedPiece.piece.getColor())){
+                if (isKingChecked(lastMovedPiece.piece.getColor())) {
                     board[fromX][fromY] = lastMovedPiece.piece;
                     board[toX][toY] = lastEatenPiece;
                     return false;
@@ -157,7 +167,7 @@ public class Board {
 
                 return true;
             }
-        }
+        //}
         return false;
     }
 

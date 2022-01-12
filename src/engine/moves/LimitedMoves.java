@@ -1,5 +1,7 @@
 package engine.moves;
 
+import engine.Board;
+
 /**
  * gère les mouvements limités
  * Mouvement limités : mouvement non infini tel ceux du roi, pion et le cavalier
@@ -23,14 +25,13 @@ public class LimitedMoves extends Movement{
      * @param endY position Y final
      * @return le déplacement est-il valide
      */
-    public boolean canMove(int startX, int startY, int endX, int endY){
+    public boolean canMove(int startX, int startY, int endX, int endY, Board board){
         int x = startX;
         int y = startY;
 
-        if(x != endX || y != endY) {
-            x += offsetX;
-            y += offsetY;
-        }
+        x += offsetX;
+        y += offsetY;
+
         return x == endX && y == endY;
     }
 }
