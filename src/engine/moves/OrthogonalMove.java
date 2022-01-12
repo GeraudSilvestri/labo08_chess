@@ -40,7 +40,7 @@ public class OrthogonalMove extends Movement{
                 break;
             }
 
-            if(board.at(x,y) != null){
+            if(x < 0 || x > 7 || y < 0 || y > 7 || board.at(x,y) != null){
                 break;
             }
         }
