@@ -15,30 +15,8 @@ public class Board {
     private final int width;
     private final ChessView view;
 
-    /**
-     * Gère une pièce ayant effectué un mouvement
-     * Nécessaire pour pouvoir annuler un mouvement et remettre la pièce à sa place initiale
-     */
-    private class MovedPiece {
-        Piece piece;
-        int x;
-        int y;
-
-        /**
-         * Constructeur
-         * @param piece pièce concernée
-         * @param x position x
-         * @param y position y
-         */
-        private MovedPiece(Piece piece, int x, int y) {
-            this.piece = piece;
-            this.x = x;
-            this.y = y;
-        }
-    }
-
     Piece lastEatenPiece;
-    MovedPiece lastMovedPiece;
+    Piece lastMovedPiece;
 
     /**
      * Constructeur
@@ -122,14 +100,14 @@ public class Board {
             if (board[fromX][fromY].canMove(fromX, fromY, toX, toY)) {
 
                 lastEatenPiece = board[toX][toY];
-                lastMovedPiece = new MovedPiece(board[fromX][fromY], toX, toY);
+                lastMovedPiece = board[fromX][fromY];
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
 
                 // check si le roi du joueur est en échec
-                if (isKingChecked(lastMovedPiece.piece.getColor())) {
-                    board[fromX][fromY] = lastMovedPiece.piece;
+                if (isKingChecked(lastMovedPiece.getColor())) {
+                    board[fromX][fromY] = lastMovedPiece;
                     board[toX][toY] = lastEatenPiece;
                     return false;
                 }
@@ -137,11 +115,21 @@ public class Board {
                 // promotion de pion
                 if (toY == (playerTurn == PlayerColor.WHITE ? width - 1 : 0)) {
                     if (board[toX][toY] instanceof Pawn) {
-                        board[toX][toY] = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
+                        Piece promue = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
                                 new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
 
-                        if (board[toX][toY] instanceof SpecialPiece) {
-                            ((SpecialPiece) board[toX][toY]).moved();
+                        if(promue != null) {
+                            if (promue instanceof SpecialPiece) {
+                                ((SpecialPiece)promue).moved();
+                            }
+                            board[toX][toY] = promue;
+                        }else{
+                            board[fromX][fromY] = lastMovedPiece;
+
+                            if(lastEatenPiece != null){
+                                board[toX][toY] = lastEatenPiece;
+                            }
+                            return false;
                         }
                     }
                 }
@@ -223,9 +211,9 @@ public class Board {
     public boolean checkEnPassant(int x, int y){
         if(board[x][y] != null && board[x][y] instanceof Pawn) {
             Pawn piece = (Pawn)board[x][y];
-            if (lastMovedPiece.piece == piece && piece.isEnPassantAble()) {
-                board[lastMovedPiece.x][lastMovedPiece.y] = null;
-                view.removePiece(lastMovedPiece.x, lastMovedPiece.y);
+            if (lastMovedPiece == piece && piece.isEnPassantAble()) {
+                board[x][y] = null;
+                view.removePiece(x, y);
                 return true;
             }
         }
