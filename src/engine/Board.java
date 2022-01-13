@@ -4,6 +4,8 @@ import chess.ChessView;
 import chess.PlayerColor;
 import engine.pieces.*;
 
+import java.util.Objects;
+
 /**
  * Gère l'échiquier
  *
@@ -25,6 +27,7 @@ public class Board {
      */
     public Board(int width, ChessView view){
         this.width = width;
+        Objects.requireNonNull(view, "Vue ne peut être null");
         this.view = view;
     }
 
@@ -125,10 +128,7 @@ public class Board {
                             board[toX][toY] = promue;
                         }else{
                             board[fromX][fromY] = lastMovedPiece;
-
-                            if(lastEatenPiece != null){
-                                board[toX][toY] = lastEatenPiece;
-                            }
+                            board[toX][toY] = lastEatenPiece;
                             return false;
                         }
                     }

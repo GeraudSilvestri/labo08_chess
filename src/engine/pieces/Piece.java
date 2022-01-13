@@ -6,6 +6,8 @@ import chess.PlayerColor;
 import engine.Board;
 import engine.moves.Movement;
 
+import java.util.Objects;
+
 /**
  * gère les différents types de pièces d'un jeu d'échec
  *
@@ -29,6 +31,7 @@ public abstract class Piece implements ChessView.UserChoice{
         this.color = color;
         this.type = type;
         this.board = board;
+        Objects.requireNonNull(board, "Un board ne peut pas être null");
         this.moves = moves;
     }
 
