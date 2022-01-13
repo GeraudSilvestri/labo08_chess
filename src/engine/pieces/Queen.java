@@ -12,7 +12,7 @@ import engine.moves.OrthogonalMove;
  * @author Géraud Silvestri
  * @author Loïc Rosset
  */
-public class Queen extends Piece{
+public class Queen extends Piece {
 
     /**
      * crée une reine avec ses différents déplacements possible

@@ -12,7 +12,7 @@ import engine.moves.OrthogonalMove;
  * @author Géraud Silvestri
  * @author Loïc Rosset
  */
-public class Bishop extends Piece{
+public class Bishop extends Piece {
 
     /**
      * crée un fou avec ses différents déplacements possible

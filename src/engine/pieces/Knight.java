@@ -12,7 +12,7 @@ import engine.moves.Movement;
  * @author Géraud Silvestri
  * @author Loïc Rosset
  */
-public class Knight extends Piece{
+public class Knight extends Piece {
 
     /**
      * crée un cavalier avec ses différents déplacements possible

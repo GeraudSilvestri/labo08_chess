@@ -12,7 +12,7 @@ import engine.moves.Movement;
  * @author Géraud Silvestri
  * @author Loïc Rosset
  */
-public abstract class SpecialPiece extends Piece{
+public abstract class SpecialPiece extends Piece {
     boolean hasMoved;
 
     /**
