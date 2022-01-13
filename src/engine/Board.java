@@ -110,8 +110,7 @@ public class Board {
 
                 // check si le roi du joueur est en échec
                 if (isKingChecked(lastMovedPiece.getColor())) {
-                    board[fromX][fromY] = lastMovedPiece;
-                    board[toX][toY] = lastEatenPiece;
+                    cancelMove(fromX,fromY,toX,toY);
                     return false;
                 }
 
@@ -124,8 +123,7 @@ public class Board {
                         if(promue != null) {
                             board[toX][toY] = promue;
                         }else{
-                            board[fromX][fromY] = lastMovedPiece;
-                            board[toX][toY] = lastEatenPiece;
+                            cancelMove(fromX, fromY, toX, toY);
                             return false;
                         }
                     }
@@ -139,6 +137,18 @@ public class Board {
             }
         //}
         return false;
+    }
+
+    /**
+     * annule un mouvement fait précedement
+     * @param fromX position X de départ
+     * @param fromY position Y de départ
+     * @param toX position X d'arrivée
+     * @param toY position Y d'arrivée
+     */
+    private void cancelMove(int fromX, int fromY, int toX, int toY){
+        board[fromX][fromY] = lastMovedPiece;
+        board[toX][toY] = lastEatenPiece;
     }
 
     /**
