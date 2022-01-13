@@ -1,6 +1,7 @@
 package engine;
 
 import chess.ChessView;
+import chess.PieceType;
 import chess.PlayerColor;
 import engine.pieces.*;
 
@@ -116,7 +117,7 @@ public class Board {
 
                 // promotion de pion
                 if (toY == (playerTurn == PlayerColor.WHITE ? width - 1 : 0)) {
-                    if (board[toX][toY] instanceof Pawn) {
+                    if (board[toX][toY].getType() == PieceType.PAWN) {
                         Piece promue = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
                                 new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
 
@@ -170,7 +171,7 @@ public class Board {
 
         for(int i = 0; i < width; ++i){
             for(int j = 0; j < width; ++j){
-                if(board[i][j] != null && board[i][j].getColor() == color && board[i][j] instanceof King){
+                if(board[i][j] != null && board[i][j].getColor() == color && board[i][j].getType() == PieceType.KING){
                     xKing = i;
                     yKing = j;
                     break;
@@ -216,7 +217,7 @@ public class Board {
      * @return la pièce est-elle mangeable en passant
      */
     public boolean checkEnPassant(int x, int y){
-        if(board[x][y] != null && board[x][y] instanceof Pawn) {
+        if(board[x][y] != null && board[x][y].getType() == PieceType.PAWN) {
             Pawn piece = (Pawn)board[x][y];
             if (lastMovedPiece == piece && piece.isEnPassantAble()) {
                 board[x][y] = null;

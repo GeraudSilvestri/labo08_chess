@@ -76,6 +76,6 @@ public class Pawn extends SpecialPiece{
                 enPassantAble = true;
         }
 
-        return super.canMove(fromX, fromY, toX, toY, board);
+        return super.canMove(fromX, fromY, toX, toY);
     }
 }

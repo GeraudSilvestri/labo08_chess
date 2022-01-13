@@ -68,6 +68,6 @@ public class King extends SpecialPiece{
                 }
             }
         }
-        return super.canMove(fromX,fromY,toX,toY, board);
+        return super.canMove(fromX,fromY,toX,toY);
     }
 }

@@ -88,8 +88,4 @@ public abstract class Piece implements ChessView.UserChoice{
         }
         return valid != null;
     }
-
-    public boolean canMove(int fromX, int fromY, int toX, int toY, Board board){
-        return canMove(fromX, fromY, toX, toY);
-    }
 }
