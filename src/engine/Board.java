@@ -57,9 +57,6 @@ public class Board {
      * @return pièce concernée ou null si l'index est outOfBounds
      */
     public Piece at(int x, int y){
-        //if(x >= width || x < 0 || y >= width || y < 0)
-          //  return null;
-
         return board[x][y];
     }
 
@@ -119,13 +116,6 @@ public class Board {
      * @return si le déplacement a été fait ou non
      */
     public boolean move(int fromX, int fromY, int toX, int toY, PlayerColor playerTurn) {
-        // vérifie que la position initiale correspond à une pièce, que la pièce soit de la couleur du joueur
-        // et qu'un déplacement ai été fait
-        /*if(board[fromX][fromY] != null
-            && board[fromX][fromY].getColor() == playerTurn
-            && (board[toX][toY] == null || board[toX][toY].getColor() != playerTurn)
-            && (toX != fromX || toY != fromY)) {*/
-
         if(board[fromX][fromY] == null ||board[fromX][fromY].getColor() != playerTurn)
             return false;
 
@@ -133,11 +123,6 @@ public class Board {
 
                 lastEatenPiece = board[toX][toY];
                 lastMovedPiece = new MovedPiece(board[fromX][fromY], toX, toY);
-
-
-                // si la pièce est un roi, une tour ou un pion, on dit qu'elle a bougé
-                if (board[fromX][fromY] instanceof SpecialPiece && ((SpecialPiece) board[fromX][fromY]).getHasMoved())
-                    ((SpecialPiece) board[fromX][fromY]).moved();
 
                 board[toX][toY] = board[fromX][fromY];
                 board[fromX][fromY] = null;
@@ -231,14 +216,18 @@ public class Board {
 
     /**
      * vérifie que la pièce voulant être mangée en passant est bel et bien mangeable
-     * @param piece pièce à vérifiée
+     * @param x position x de la pièce à vérifier
+     * @param y position y de la pièce à vérifier
      * @return la pièce est-elle mangeable en passant
      */
-    public boolean checkEnPassant(Pawn piece){
-        if(lastMovedPiece.piece == piece && piece.isEnPassantAble()){
-            board[lastMovedPiece.x][lastMovedPiece.y] = null;
-            view.removePiece(lastMovedPiece.x, lastMovedPiece.y);
-            return true;
+    public boolean checkEnPassant(int x, int y){
+        if(board[x][y] != null && board[x][y] instanceof Pawn) {
+            Pawn piece = (Pawn)board[x][y];
+            if (lastMovedPiece.piece == piece && piece.isEnPassantAble()) {
+                board[lastMovedPiece.x][lastMovedPiece.y] = null;
+                view.removePiece(lastMovedPiece.x, lastMovedPiece.y);
+                return true;
+            }
         }
         return false;
     }

@@ -42,6 +42,7 @@ public abstract class SpecialPiece extends Piece{
         return hasMoved;
     }
 
+    @Override
     public boolean canMove(int fromX, int fromY, int toX, int toY, Board board){
         if(super.canMove(fromX, fromY, toX, toY)){
             hasMoved = true;

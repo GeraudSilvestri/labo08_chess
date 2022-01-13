@@ -5,7 +5,6 @@ import chess.PieceType;
 import chess.PlayerColor;
 import engine.Board;
 import engine.moves.Movement;
-import engine.moves.OrthogonalMove;
 
 /**
  * gère les différents types de pièces d'un jeu d'échec
@@ -85,5 +84,9 @@ public abstract class Piece implements ChessView.UserChoice{
             }
         }
         return valid != null;
+    }
+
+    public boolean canMove(int fromX, int fromY, int toX, int toY, Board board){
+        return canMove(fromX, fromY, toX, toY);
     }
 }

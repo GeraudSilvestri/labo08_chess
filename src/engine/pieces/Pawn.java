@@ -53,34 +53,29 @@ public class Pawn extends SpecialPiece{
      */
     @Override
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
-        int distance = abs(toY-fromY);
-
-        /*if(distance == 1) {
-            // vérifie qu'on ne mange rien
-            if (toX == fromX && board.at(toX, toY) != null)
-                return false;
-
-            // vérifie que lors d'un déplacement en diagonal, on mange une pièce via en passant ou non
-            else if (toX != fromX && board.at(toX, toY) == null) {
-                // check en passant
-                Piece temp = board.at(toX, toY + (getColor() == PlayerColor.WHITE ? -1 : 1));
-                if (temp instanceof Pawn && temp.getColor() != getColor()) {
-                    return board.checkEnPassant((Pawn)temp);
-                }
-                else {
+        // check le manger en diagonal
+        if(toX != fromX) {
+            if (board.at(toX, toY) != null) {
+                if (board.at(toX, toY).getColor() == board.at(fromX, fromY).getColor()) {
                     return false;
                 }
+            }else{ // check en passant
+                return board.checkEnPassant(toX, toY + (fromY-toY > 0 ? 1 : -1));
             }
-        }
-        else if(distance == 2) {
-            // mets que la pièce peut être mangée en passant
-            if(!this.getHasMoved() && board.at(fromX, fromY + (toY-fromY)/2) == null){
-                enPassantAble = true;
-            }else{
+        }else{ // check le manger forward
+            if(board.at(toX, toY) != null){
                 return false;
             }
-        }*/
+        }
+        // check le déplacement initial de 2
+        if(abs(toY-fromY) == 2){
+            // check déplacement est valide
+            if(hasMoved || board.at(toX, toY + (toY-fromY > 0 ? -1 : 1)) != null)
+                return false;
+            else
+                enPassantAble = true;
+        }
 
-        return super.canMove(fromX, fromY, toX, toY);
+        return super.canMove(fromX, fromY, toX, toY, board);
     }
 }
