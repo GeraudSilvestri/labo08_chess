@@ -46,7 +46,7 @@ public class King extends SpecialPiece{
     public boolean canMove(int fromX, int fromY, int toX, int toY) {
 
         // vérifie si un roque est faisable
-        if (abs(fromX - toX) == 2 && fromY - toY == 0) {
+        if (abs(fromX - toX) == 2 && fromY - toY == 0 && !hasMoved) {
             boolean isLeft = fromX - toX > 0;
             int rookX = isLeft ? 0 : board.getWidth() - 1;
             int newRookX = fromX + (isLeft ? -1 : 1);
@@ -68,6 +68,6 @@ public class King extends SpecialPiece{
                 }
             }
         }
-        return super.canMove(fromX,fromY,toX,toY);
+        return super.canMove(fromX,fromY,toX,toY, board);
     }
 }
