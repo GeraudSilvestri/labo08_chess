@@ -29,6 +29,9 @@ public class LimitedMoves extends Movement{
         int x = startX;
         int y = startY;
 
+        if(board.at(endX, endY) != null && board.at(startX, startY).getColor() == board.at(endX, endY).getColor())
+            return false;
+
         x += offsetX;
         y += offsetY;
 

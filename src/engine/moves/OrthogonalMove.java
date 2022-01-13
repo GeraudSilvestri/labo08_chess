@@ -31,6 +31,9 @@ public class OrthogonalMove extends Movement{
         int y = startY;
         int distance = abs(startX-endX) > 0 ? abs(startX-endX) : abs(startY-endY);
 
+        if(board.at(endX, endY) != null && board.at(startX, startY).getColor() == board.at(endX, endY).getColor())
+            return false;
+
         for(int i = 0; i < distance; ++i) {
             x += offsetX;
             y += offsetY;
