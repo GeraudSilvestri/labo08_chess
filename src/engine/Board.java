@@ -122,9 +122,6 @@ public class Board {
                                 new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
 
                         if(promue != null) {
-                            if (promue instanceof SpecialPiece) {
-                                ((SpecialPiece)promue).moved();
-                            }
                             board[toX][toY] = promue;
                         }else{
                             board[fromX][fromY] = lastMovedPiece;
