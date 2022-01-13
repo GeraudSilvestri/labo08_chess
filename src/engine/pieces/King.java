@@ -26,7 +26,7 @@ public class King extends SpecialPiece{
         super(color, PieceType.KING, board,  new Movement[] {
                 new LimitedMoves(0,1),
                 new LimitedMoves(0,-1),
-                new LimitedMoves(-1,0),
+                new LimitedMoves(1,0),
                 new LimitedMoves(-1,0),
                 new LimitedMoves(-1,-1),
                 new LimitedMoves(-1,1),
