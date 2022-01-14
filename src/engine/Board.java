@@ -101,42 +101,39 @@ public class Board {
         if(board[fromX][fromY] == null ||board[fromX][fromY].getColor() != playerTurn)
             return false;
 
-            if (board[fromX][fromY].canMove(fromX, fromY, toX, toY)) {
+        if (board[fromX][fromY].canMove(fromX, fromY, toX, toY)) {
 
-                lastEatenPiece = board[toX][toY];
-                lastMovedPiece = board[fromX][fromY];
+            lastEatenPiece = board[toX][toY];
+            lastMovedPiece = board[fromX][fromY];
 
-                board[toX][toY] = board[fromX][fromY];
-                board[fromX][fromY] = null;
+            board[toX][toY] = board[fromX][fromY];
+            board[fromX][fromY] = null;
 
-                // check si le roi du joueur est en échec
-                if (isKingChecked(lastMovedPiece.getColor())) {
-                    cancelMove(fromX,fromY,toX,toY);
-                    return false;
-                }
-
-                // promotion de pion
-                if (toY == (playerTurn == PlayerColor.WHITE ? width - 1 : 0)) {
-                    if (board[toX][toY].getType() == PieceType.PAWN) {
-                        Piece promue = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
-                                new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
-
-                        if(promue != null) {
-                            board[toX][toY] = promue;
-                        }else{
-                            cancelMove(fromX, fromY, toX, toY);
-                            return false;
-                        }
-                    }
-                }
-
-                // met a jour la vue uniquement avec les pièces ayant bougé
-                view.removePiece(fromX, fromY);
-                view.putPiece(board[toX][toY].getType(), board[toX][toY].getColor(), toX, toY);
-
-                return true;
+            // check si le roi du joueur est en échec
+            if (isKingChecked(lastMovedPiece.getColor())) {
+                cancelMove(fromX,fromY,toX,toY);
+                return false;
             }
-        //}
+
+            // promotion de pion
+            if (toY == (playerTurn == PlayerColor.WHITE ? width - 1 : 0)) {
+                if (board[toX][toY].getType() == PieceType.PAWN) {
+                    Piece promue = null;
+
+                    while(promue == null) {
+                        promue = view.askUser("Promotion", "Switch", new Knight(playerTurn, this),
+                                new Bishop(playerTurn, this), new Rook(playerTurn, this), new Queen(playerTurn, this));
+                    }
+                    board[toX][toY] = promue;
+                }
+            }
+
+            // met a jour la vue uniquement avec les pièces ayant bougé
+            view.removePiece(fromX, fromY);
+            view.putPiece(board[toX][toY].getType(), board[toX][toY].getColor(), toX, toY);
+
+            return true;
+        }
         return false;
     }
 

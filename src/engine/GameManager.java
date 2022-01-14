@@ -9,7 +9,6 @@ import chess.*;
  */
 public class GameManager implements ChessController {
     final int BOARD_SIZE = 8;
-    int turn = 0;
     ChessView view;
     Board board;
     PlayerColor playerTurn;
@@ -38,7 +37,6 @@ public class GameManager implements ChessController {
     public boolean move(int fromX, int fromY, int toX, int toY) {
         boolean turnIsGood = false;
         if(board.move(fromX, fromY, toX, toY, playerTurn)){
-            turn++;
             playerTurn = playerTurn == PlayerColor.WHITE ? PlayerColor.BLACK : PlayerColor.WHITE;
             turnIsGood = true;
         }
