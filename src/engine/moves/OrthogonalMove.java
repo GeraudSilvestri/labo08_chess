@@ -50,37 +50,4 @@ public class OrthogonalMove extends Movement{
 
         return move;
     }
-
-    /**
-     * vérifie que le chemin emprunté par une pièce lors d'un déplacement est vide
-     * @param startX position X de départ
-     * @param startY position Y de départ
-     * @param endX position X d'arrivée
-     * @param endY position Y d'arrivée
-     * @param board échiquier sur lequel la pièce se déplace
-     * @return le passage est-il libre ou non
-     */
-    /*@Override
-    public boolean checkCollisions(int startX, int startY, int endX, int endY, Board board) {
-        int x = startX;
-        int y = startY;
-
-        // la case d'arrivée à une pièce de la même couleur
-        if(board.at(endX,endY) != null && board.at(x,y).getColor() == board.at(endX,endY).getColor())
-            return false;
-
-        // calcul la distance entre 2 cases
-        int distance = abs(startY-endY) > 0 ? abs(startY-endY) : abs(startX-endX);
-
-        for(int i = 0; i < distance; ++i){
-            x += offsetX;
-            y += offsetY;
-
-            // Vérification qu'il n'y a pas de collisions sauf à la dernière case
-            if (board.at(x,y) != null) {
-                return false;
-            }
-        }
-        return true;
-    }*/
 }

@@ -29,17 +29,4 @@ public abstract class Movement {
      * @return le déplacement est-il valide
      */
     public abstract boolean canMove(int startX, int startY, int endX, int endY, Board board);
-
-    /**
-     * vérifie que les cases empruntées par un déplacement soient libres
-     * @param startX position X de départ
-     * @param startY position Y de départ
-     * @param endX position X d'arrivée
-     * @param endY position Y d'arrivée
-     * @param board l'échiquier sur lequel la pièce se déplace
-     * @return le passage est-il vide ou non
-     */
-    /*public boolean checkCollisions(int startX, int startY, int endX, int endY, Board board){
-        return true;
-    }*/
 }
